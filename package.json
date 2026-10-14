@@ -25,6 +25,14 @@
   ],
   "author": "Ahmed Osama",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahmedosamaalam/tz-short-name.git"
+  },
+  "homepage": "https://github.com/ahmedosamaalam/tz-short-name#readme",
+  "bugs": {
+    "url": "https://github.com/ahmedosamaalam/tz-short-name/issues"
+  },
   "devDependencies": {
     "@vvo/tzdb": "^6.201.1",
     "esbuild": "^0.28.2",
