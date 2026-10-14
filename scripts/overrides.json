@@ -1,0 +1,286 @@
+{
+ "Asia/Karachi": [
+  [
+   "PKT",
+   300
+  ],
+  [
+   "PKST",
+   360
+  ]
+ ],
+ "Asia/Dubai": [
+  [
+   "GST",
+   240
+  ]
+ ],
+ "Asia/Muscat": [
+  [
+   "GST",
+   240
+  ]
+ ],
+ "Asia/Dhaka": [
+  [
+   "BST",
+   360
+  ]
+ ],
+ "Asia/Dacca": [
+  [
+   "BST",
+   360
+  ]
+ ],
+ "Asia/Kathmandu": [
+  [
+   "NPT",
+   345
+  ]
+ ],
+ "Asia/Katmandu": [
+  [
+   "NPT",
+   345
+  ]
+ ],
+ "Asia/Riyadh": [
+  [
+   "AST",
+   180
+  ]
+ ],
+ "Asia/Qatar": [
+  [
+   "AST",
+   180
+  ]
+ ],
+ "Asia/Kuwait": [
+  [
+   "AST",
+   180
+  ]
+ ],
+ "Asia/Bahrain": [
+  [
+   "AST",
+   180
+  ]
+ ],
+ "Asia/Baghdad": [
+  [
+   "AST",
+   180
+  ]
+ ],
+ "Asia/Tehran": [
+  [
+   "IRST",
+   210
+  ],
+  [
+   "IRDT",
+   270
+  ]
+ ],
+ "Asia/Kabul": [
+  [
+   "AFT",
+   270
+  ]
+ ],
+ "Asia/Tashkent": [
+  [
+   "UZT",
+   300
+  ]
+ ],
+ "Asia/Colombo": [
+  [
+   "IST",
+   330
+  ]
+ ],
+ "Asia/Yangon": [
+  [
+   "MMT",
+   390
+  ]
+ ],
+ "Asia/Rangoon": [
+  [
+   "MMT",
+   390
+  ]
+ ],
+ "Asia/Bangkok": [
+  [
+   "ICT",
+   420
+  ]
+ ],
+ "Asia/Ho_Chi_Minh": [
+  [
+   "ICT",
+   420
+  ]
+ ],
+ "Asia/Saigon": [
+  [
+   "ICT",
+   420
+  ]
+ ],
+ "Asia/Singapore": [
+  [
+   "SGT",
+   480
+  ]
+ ],
+ "Asia/Kuala_Lumpur": [
+  [
+   "MYT",
+   480
+  ]
+ ],
+ "Asia/Manila": [
+  [
+   "PHT",
+   480
+  ]
+ ],
+ "Asia/Dili": [
+  [
+   "TLT",
+   540
+  ]
+ ],
+ "Europe/Istanbul": [
+  [
+   "TRT",
+   180
+  ]
+ ],
+ "Asia/Istanbul": [
+  [
+   "TRT",
+   180
+  ]
+ ],
+ "Turkey": [
+  [
+   "TRT",
+   180
+  ]
+ ],
+ "Europe/Samara": [
+  [
+   "SAMT",
+   240
+  ]
+ ],
+ "Asia/Yekaterinburg": [
+  [
+   "YEKT",
+   300
+  ]
+ ],
+ "Asia/Novosibirsk": [
+  [
+   "NOVT",
+   420
+  ]
+ ],
+ "Asia/Vladivostok": [
+  [
+   "VLAT",
+   600
+  ]
+ ],
+ "America/Sao_Paulo": [
+  [
+   "BRT",
+   -180
+  ]
+ ],
+ "America/Argentina/Buenos_Aires": [
+  [
+   "ART",
+   -180
+  ]
+ ],
+ "America/Buenos_Aires": [
+  [
+   "ART",
+   -180
+  ]
+ ],
+ "America/Bogota": [
+  [
+   "COT",
+   -300
+  ]
+ ],
+ "America/Lima": [
+  [
+   "PET",
+   -300
+  ]
+ ],
+ "America/Caracas": [
+  [
+   "VET",
+   -240
+  ]
+ ],
+ "America/Santiago": [
+  [
+   "CLT",
+   -240
+  ],
+  [
+   "CLST",
+   -180
+  ]
+ ],
+ "Atlantic/Azores": [
+  [
+   "AZOT",
+   -60
+  ],
+  [
+   "AZOST",
+   0
+  ]
+ ],
+ "Atlantic/Cape_Verde": [
+  [
+   "CVT",
+   -60
+  ]
+ ],
+ "Africa/Casablanca": null,
+ "Africa/El_Aaiun": null,
+ "Australia/Lord_Howe": [
+  [
+   "LHST",
+   630
+  ],
+  [
+   "LHDT",
+   660
+  ]
+ ],
+ "Australia/LHI": [
+  [
+   "LHST",
+   630
+  ],
+  [
+   "LHDT",
+   660
+  ]
+ ]
+}

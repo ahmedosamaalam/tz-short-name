@@ -1,0 +1,61 @@
+{
+  "name": "tz-short-name",
+  "version": "1.0.0",
+  "description": "Time zone names from the browser: short (PKT, GST, EST/EDT) by default, or full (Pakistan Standard Time). Fills the gaps where Intl only returns GMT+5.",
+  "main": "./dist/index.cjs",
+  "scripts": {
+    "generate": "node scripts/generate-map.cjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/index.test.mjs",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "keywords": [
+    "timezone",
+    "time-zone",
+    "abbreviation",
+    "tz",
+    "PKT",
+    "IST",
+    "short-name",
+    "intl",
+    "browser",
+    "dst",
+    "long-name",
+    "timezone-name"
+  ],
+  "author": "Ahmed Osama",
+  "license": "MIT",
+  "devDependencies": {
+    "@vvo/tzdb": "^6.201.1",
+    "esbuild": "^0.28.2",
+    "moment-timezone": "^0.6.5"
+  },
+  "type": "module",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/tz-short-name.min.js",
+  "jsdelivr": "./dist/tz-short-name.min.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./abbreviations.json": "./src/abbreviations.json"
+  },
+  "files": [
+    "dist",
+    "src/abbreviations.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=14"
+  }
+}
