@@ -106,6 +106,45 @@ test("short name always agrees with the clock's real offset", async () => {
   }
 });
 
+test("Arab countries: short names", () => {
+  const cases = {
+    "Asia/Riyadh": "AST", "Asia/Qatar": "AST", "Asia/Kuwait": "AST", "Asia/Bahrain": "AST",
+    "Asia/Baghdad": "AST", "Asia/Aden": "AST", "Asia/Dubai": "GST", "Asia/Muscat": "GST",
+    "Africa/Algiers": "CET", "Africa/Tunis": "CET", "Africa/Tripoli": "EET", "Africa/Khartoum": "CAT",
+  };
+  for (const [tz, want] of Object.entries(cases)) {
+    assert.equal(getShortName({ timeZone: tz, date: WINTER }), want, tz);
+    assert.equal(getShortName({ timeZone: tz, date: SUMMER }), want, tz);
+  }
+});
+
+test("Arab countries with daylight saving (Egypt, Lebanon)", () => {
+  for (const tz of ["Africa/Cairo", "Asia/Beirut"]) {
+    assert.equal(getShortName({ timeZone: tz, date: WINTER }), "EET", tz);
+    assert.equal(getShortName({ timeZone: tz, date: SUMMER }), "EEST", tz);
+  }
+});
+
+test("Arab countries: full names in English and Arabic", () => {
+  assert.equal(getLongName({ timeZone: "Asia/Riyadh", locale: "en-US" }), "Arabian Standard Time");
+  assert.equal(getLongName({ timeZone: "Asia/Dubai", locale: "en-US" }), "Gulf Standard Time");
+  assert.equal(getLongName({ timeZone: "Asia/Dubai", locale: "ar" }), "توقيت الخليج");
+  assert.equal(getLongName({ timeZone: "Africa/Cairo", locale: "en-US", date: SUMMER }), "Eastern European Summer Time");
+});
+
+test("Arab countries without an agreed short name fall back to the offset", () => {
+  assert.equal(getShortName({ timeZone: "Asia/Amman" }), "GMT+3");
+  assert.equal(getShortName({ timeZone: "Asia/Damascus" }), "GMT+3");
+  assert.equal(getShortName({ timeZone: "Africa/Casablanca" }), "GMT+1");
+  assert.equal(getShortName({ timeZone: "Asia/Amman", overrides: { "Asia/Amman": "AST" } }), "AST");
+});
+
+test("formatWithTimeZone for the Gulf", () => {
+  const at = "2026-10-14T10:45:00Z";
+  assert.equal(formatWithTimeZone(at, { timeZone: "Asia/Dubai", locale: "en-US" }), "Oct 14, 2026, 2:45 PM GST");
+  assert.equal(formatWithTimeZone(at, { timeZone: "Asia/Riyadh", locale: "en-US", style: "long" }), "Oct 14, 2026, 1:45 PM Arabian Standard Time");
+});
+
 test("style defaults to short", () => {
   assert.equal(getTimeZoneName({ timeZone: "Asia/Karachi" }), "PKT");
   assert.equal(getTimeZoneName({ timeZone: "Asia/Karachi", style: "short" }), "PKT");

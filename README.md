@@ -1,20 +1,32 @@
 # tz-short-name
 
-Get time zone names like **PKT**, **IST**, **GST**, **EST/EDT** from the user's browser time zone — or the full name (**Pakistan Standard Time**) when you need it. Short is the default.
+Show time zone names like **PKT**, **GST**, **AST**, **IST** and **EST/EDT** from the user's browser time zone, or the full name (**Pakistan Standard Time**, **Gulf Standard Time**) when you need it. Short is the default.
 
-JavaScript's built-in `Intl` only knows letter abbreviations for a few regions (mostly the US). For most of the world it returns an offset instead:
+## The problem
+
+JavaScript's built-in `Intl` only knows short names for a few regions, mostly the US. For most of the world, including Pakistan, India and the Gulf, it gives you an offset instead:
 
 ```js
 new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Karachi", timeZoneName: "short" }).format(new Date());
-// "10/14/2026, GMT+5"   ← not "PKT"
+// "10/14/2026, GMT+5"   ← users expect "PKT"
+
+new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Dubai", timeZoneName: "short" }).format(new Date());
+// "10/14/2026, GMT+4"   ← users expect "GST"
 ```
 
-`tz-short-name` fixes that with a small built-in map, and still switches correctly between standard and daylight time (EST → EDT, GMT → BST, AEST → AEDT).
+`tz-short-name` returns the name people actually use:
+
+```js
+getTimeZoneName();   // "PKT"  in Pakistan
+                     // "GST"  in the UAE
+                     // "AST"  in Saudi Arabia
+                     // "EDT"  in New York (summer), "EST" in winter
+```
 
 - Zero dependencies, ~7 KB gzipped
-- Works in browsers, Node, Deno, Bun
+- Works in browsers, Node, Deno and Bun
 - ESM, CommonJS and a `<script>` build, with TypeScript types
-- Every country except Jordan, Syria and Kazakhstan has letter names (409 of the 418 zones browsers report). Those three changed their offsets recently and have no agreed abbreviation, so they fall back to `Intl` (`GMT+3`, `GMT+5`); set your own with `overrides` if you need letters.
+- Handles daylight saving automatically
 
 ## Install
 
@@ -27,22 +39,31 @@ npm install tz-short-name
 ```js
 import { getTimeZoneName, formatWithTimeZone } from "tz-short-name";
 
-// Short (default)
-getTimeZoneName();                              // "PKT"  (uses the browser's time zone)
-getTimeZoneName({ timeZone: "Asia/Dubai" });    // "GST"
+// Short (default), uses the browser's time zone
+getTimeZoneName();                                   // "PKT"
+
+// Any time zone
+getTimeZoneName({ timeZone: "Asia/Dubai" });         // "GST"
+getTimeZoneName({ timeZone: "Asia/Riyadh" });        // "AST"
+getTimeZoneName({ timeZone: "Asia/Kolkata" });       // "IST"
 getTimeZoneName({ timeZone: "America/New_York", date: "2026-07-01" }); // "EDT"
 
-// Full
-getTimeZoneName({ style: "long" });             // "Pakistan Standard Time"
-getTimeZoneName({ style: "long", locale: "ur-PK" }); // "پاکستان کا معیاری وقت"
+// Full name
+getTimeZoneName({ style: "long" });                  // "Pakistan Standard Time"
+getTimeZoneName({ timeZone: "Asia/Riyadh", style: "long" });            // "Arabian Standard Time"
 
-// Date + zone
-formatWithTimeZone(new Date());                 // "Oct 14, 2026, 3:45 PM PKT"
-formatWithTimeZone(new Date(), { style: "long" }); // "Oct 14, 2026, 3:45 PM Pakistan Standard Time"
+// Full name in the user's language
+getTimeZoneName({ style: "long", locale: "ur-PK" }); // "پاکستان کا معیاری وقت"
+getTimeZoneName({ timeZone: "Asia/Dubai", style: "long", locale: "ar" }); // "توقيت الخليج"
+
+// Date + time zone
+formatWithTimeZone(new Date());                      // "Oct 14, 2026, 3:45 PM PKT"
+formatWithTimeZone(new Date(), { style: "long" });   // "Oct 14, 2026, 3:45 PM Pakistan Standard Time"
+formatWithTimeZone(new Date(), { timeZone: "Asia/Dubai" });            // "Oct 14, 2026, 2:45 PM GST"
 formatWithTimeZone(Date.now(), {
   locale: "en-GB",
   format: { hour: "2-digit", minute: "2-digit" },
-});                                             // "15:45 PKT"
+});                                                  // "15:45 PKT"
 ```
 
 Shortcuts: `getShortName()` and `getLongName()` take the same options without `style`.
@@ -67,16 +88,38 @@ Browser `<script>`:
 <script>console.log(TzShortName.getTimeZoneName());</script>
 ```
 
-### Daylight saving
+## Examples by country
 
-Both styles switch automatically at the exact minute the clocks change (EST → EDT, GMT → BST, AEST → AEDT, even Lord Howe Island's half-hour shift). Pass `date` to get the name that applied at any moment, including the past — `Asia/Karachi` in July 2008 is `PKST`.
+| Country | Time zone | Short | Full |
+| --- | --- | --- | --- |
+| Pakistan | `Asia/Karachi` | PKT | Pakistan Standard Time |
+| India | `Asia/Kolkata` | IST | India Standard Time |
+| Bangladesh | `Asia/Dhaka` | BST | Bangladesh Standard Time |
+| Saudi Arabia | `Asia/Riyadh` | AST | Arabian Standard Time |
+| UAE | `Asia/Dubai` | GST | Gulf Standard Time |
+| Qatar | `Asia/Qatar` | AST | Arabian Standard Time |
+| Kuwait | `Asia/Kuwait` | AST | Arabian Standard Time |
+| Bahrain | `Asia/Bahrain` | AST | Arabian Standard Time |
+| Oman | `Asia/Muscat` | GST | Gulf Standard Time |
+| Iraq | `Asia/Baghdad` | AST | Arabian Standard Time |
+| Yemen | `Asia/Aden` | AST | Arabian Standard Time |
+| Egypt | `Africa/Cairo` | EET / EEST | Eastern European Standard / Summer Time |
+| Lebanon | `Asia/Beirut` | EET / EEST | Eastern European Standard / Summer Time |
+| Algeria | `Africa/Algiers` | CET | Central European Standard Time |
+| Tunisia | `Africa/Tunis` | CET | Central European Standard Time |
+| Libya | `Africa/Tripoli` | EET | Eastern European Standard Time |
+| Sudan | `Africa/Khartoum` | CAT | Central Africa Time |
+| United Kingdom | `Europe/London` | GMT / BST | Greenwich Mean Time / British Summer Time |
+| United States (East) | `America/New_York` | EST / EDT | Eastern Standard / Daylight Time |
+| Australia (Sydney) | `Australia/Sydney` | AEST / AEDT | Australian Eastern Standard / Daylight Time |
 
-The package never decides on its own when daylight saving starts. It asks the browser what the clock's UTC offset is at that moment, then picks the name that belongs to that offset. So when a country changes its rules (British Columbia, Alberta, Manitoba and Yukon stop changing clocks on 1 Nov 2026), the clock follows the browser's own up-to-date data, and if the browser reports an offset this package has no name for, it shows `GMT-7` rather than a wrong name.
+A few countries have no widely agreed short name, so you get the offset instead: **Jordan** and **Syria** (`GMT+3`), **Morocco** (`GMT+1`) and **Kazakhstan** (`GMT+5`). You can set your own with `overrides`.
 
-### Where the names come from
+## Daylight saving
 
-- **Short** names come from this package's built-in map, because browsers don't have them. Each name is stored with its UTC offset and the dates it was in use.
-- **Long** names come from the browser itself (`Intl`), so they're translated into the user's language and kept up to date by the browser. About 396 of 418 zones have one; the rest fall back to an offset like `GMT+03:00`.
+Names switch automatically at the exact minute the clocks change: EST → EDT, GMT → BST, EET → EEST in Egypt and Lebanon. Pass `date` to get the name for any moment, past or future. For example, Pakistan in July 2008 shows `PKST`.
+
+When a country changes its daylight saving rules, the switch dates follow the user's browser, which is kept up to date with the operating system.
 
 ## API
 
@@ -85,39 +128,26 @@ The package never decides on its own when daylight saving starts. It asks the br
 | `getTimeZoneName({ style?, timeZone?, date?, locale?, overrides? })` | `"PKT"`, or `"Pakistan Standard Time"` with `style: "long"` |
 | `getShortName(options?)` | Same, always short |
 | `getLongName(options?)` | Same, always long |
-| `formatWithTimeZone(date?, { style?, timeZone?, locale?, format?, overrides? })` | Formatted date + zone name |
+| `formatWithTimeZone(date?, { style?, timeZone?, locale?, format?, overrides? })` | Formatted date + time zone name |
 | `formatWithShortName(...)` | Alias of `formatWithTimeZone` |
-| `getTimeZone()` | Browser IANA zone, e.g. `"Asia/Karachi"` |
+| `getTimeZone()` | Browser time zone, e.g. `"Asia/Karachi"` |
 | `isDST(date?, timeZone?)` | `true` during daylight saving |
 | `hasName(timeZone?, style?)` | `true` if a real name (not an offset) is known |
 | `hasShortName(timeZone?)` | Same as `hasName(tz, "short")` |
 
-`style` defaults to `"short"`. `locale` defaults to the browser's language. Invalid zones, dates or styles throw a `RangeError`.
+`style` defaults to `"short"`. `locale` defaults to the browser's language. An invalid time zone, date or style throws a `RangeError`.
 
-### Overrides
+## Overrides
 
-Some abbreviations are shared by more than one country (**IST** is India, Ireland and Israel; **BST** is British Summer Time and Bangladesh; **CST** is US Central and China). If you need something specific, pass your own:
+Some short names are used by more than one country: **AST** is Arabia and the Atlantic, **IST** is India, Ireland and Israel, **BST** is Britain and Bangladesh. To show something specific, pass your own:
 
 ```js
-getTimeZoneName({ overrides: { "Asia/Dhaka": "BDT", "America/New_York": ["ET", "ET"] } });
+getTimeZoneName({ overrides: { "Asia/Dhaka": "BDT", "Asia/Riyadh": "KSA" } });
+getTimeZoneName({ overrides: { "Asia/Amman": "AST" } });                       // Jordan
 getTimeZoneName({ style: "long", overrides: { "Asia/Amman": "Jordan Time" } });
 ```
 
-A string sets one name; a `[standard, daylight]` pair sets both. Overrides apply to the style you ask for, so pass short names with short and full names with long.
-
-The raw map is also exported: `import map from "tz-short-name/abbreviations.json"`. Each zone maps to `[name, offsetMinutes, from?, to?]` entries (`from`/`to` are minutes since 1970, present only when a name was introduced or retired after 2000).
-
-## Updating the data
-
-The map is generated from `moment-timezone` and `@vvo/tzdb` (dev dependencies only), plus manual fixes in `scripts/overrides.json`:
-
-```bash
-npm run generate && npm run build && npm test
-```
-
-## Accuracy
-
-Checked against the official time zone database (2026e) one minute before and after every clock change from 2010 to 2027 — 9,060 checks. Every name since 2023 is correct. 43 older dates (2010–2022) in four zones that changed their rules several times (Libya, Ciudad Juárez, Metlakatla, Istanbul) show a neighbouring name or `GMT±`.
+A string sets one name; a `[standard, daylight]` pair sets both, e.g. `["EET", "EEST"]`. Overrides apply to the style you ask for.
 
 ## License
 
